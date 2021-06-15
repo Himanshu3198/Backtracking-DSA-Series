@@ -1,93 +1,38 @@
-#include <bits/stdc++.h>
-using namespace std;
-
-bool isSafe(int **arr, int x, int y, int n)
-{
-    for (int row=0; row < x; row++)
-    {
-        if (arr[row][y] ==1)
-        {
-            return false;
-        }
-    }
-    int row = x;
-    int col = y;
-    while (row >= 0 && col >= 0)
-    {
-        if (arr[row][col] == 1)
-        {
-            return false;
-        }
-        row--;
-        col--;
-    }
-
-    row = x;
-    col = y;
-    while (row >= 0 && col < n)
-    {
-        if (arr[row][col] == 1)
-        {
-            return false;
-        }
-        row--;
-        col++;
-    }
-
-    return true;
-}
-
-bool nQueen(int **arr,int x,int n){
-    if(x>=n){
+  vector<vector<string>> ret;
+    bool is_valid(vector<string> &board, int row, int col){
+        // check col
+        for(int i=row;i>=0;--i)
+            if(board[i][col] == 'Q') return false;
+        // check left diagonal
+        for(int i=row,j=col;i>=0&&j>=0;--i,--j)
+            if(board[i][j] == 'Q') return false;
+        //check right diagonal
+        for(int i=row,j=col;i>=0&&j<board.size();--i,++j)
+            if(board[i][j] == 'Q') return false;
         return true;
     }
-    for(int col=0;col<n;col++){
-        if(isSafe(arr,x,col,n)){
-            arr[x][col]=1;
-
-            if(nQueen(arr,x+1,n)){
-                return true;
+    void dfs(vector<string> &board, int row){
+        // exit condition
+        if(row == board.size()){
+            ret.push_back(board);
+            return;
+        }
+        // iterate every possible position
+        for(int i=0;i<board.size();++i){
+            if(is_valid(board,row,i)){
+                // make decision
+                board[row][i] = 'Q';
+                // next iteration
+                dfs(board,row+1);
+                // back-tracking
+                board[row][i] = '.';
             }
-
-            else{
-                 arr[x][col]=0;      //backtracking
-            }
-           
         }
     }
-    return false;
-}
-
-int main()
-{
-    int n;
-    cin>>n;
-    
-    int **arr = new int *[n];
-    for (int i = 0; i < n; i++)
-    {
-        arr[i]  = new int[n];
-
-        for (int j = 0; j < n; j++)
-        {
-            arr[i][j] = 0;
-        }
+    vector<vector<string>> solveNQueens(int n) {
+		// return empty if n <= 0
+        if(n <= 0) return {{}};
+        vector<string> board(n,string(n,'.'));
+        dfs(board,0);
+        return ret;
     }
-    
-    
-//      cout<<nQueen(arr,0,n)<<"\n";
-    if(nQueen(arr, 0, n))
-    {
-        for (int i = 0; i < n; i++)
-        {
-            for (int j = 0; j < n; j++)
-            {
-                cout << arr[i][j] << " ";
-            }
-            cout << "\n";
-        }
-    }
-    
-    
-    
-}
