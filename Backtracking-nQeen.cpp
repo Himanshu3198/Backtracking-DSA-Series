@@ -1,4 +1,6 @@
-  vector<vector<string>> ret;
+class Solution {
+public:
+     vector<vector<string>> ret;
     bool is_valid(vector<string> &board, int row, int col){
         // check col
         for(int i=row;i>=0;--i)
@@ -36,3 +38,4 @@
         dfs(board,0);
         return ret;
     }
+};
