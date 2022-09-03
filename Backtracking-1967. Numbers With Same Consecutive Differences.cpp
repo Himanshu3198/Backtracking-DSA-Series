@@ -1,52 +1,40 @@
 class Solution {
 public:
-    
-       vector<int>res;
-    
-       void dfs(int curr,int prev,int n,int k,int maxReach){
-           
-           
-           if(n==0){
-               res.push_back(curr);
-               return;
-           }
-           if(curr>maxReach){
-               return;
-           }
-           
-           int next=prev+k;
-           
-           
-           if(next<=9){
-               
-              int num=curr*10+next;
+    vector<int>res;
+    void solve(int n,int k,int maxNum,long long int curr){
+        
+        if(n==0) res.push_back(curr);
+        if(curr>=maxNum) return;
+        int prev=curr%10;
+        int next=prev+k;
+        long long int same;
+        if(next<=9){
+            long long int x=curr*10LL+(next);
+            same=x;
+            solve(n-1,k,maxNum,x);
+        } 
+            bool flag=false;
+            for(int i=0;i<=9;i++){
 
-               dfs(num,next,n-1,k,maxReach);
-           }
-           
-           next=prev-k;
-           
-           if(next>=0 and k!=0){
-              int num=curr*10+next;
-               dfs(num,next,n-1,k,maxReach);
-           }
-       }
+                if(abs(prev-i)==k){
+                long long int x;
+                    if(i==0) x=curr*10;
+                    else x=curr*10+i;
+                    if(same!=x){
+                    solve(n-1,k,maxNum,x);
+                    flag=true;
+                    break;
+                    }
+                }
+            }
+            if(!flag) return;
+    }
     vector<int> numsSameConsecDiff(int n, int k) {
-      
-             if(n==1){
-                 
-                 return {1,2,3,4,5,6,7,8,9};
-             }
         
-          int maxReach=pow(10,n);
-            maxReach--;
-        
-        for(int i=1;i<=9;i++){
-            
-            dfs(i,i,n-1,k,maxReach);
-        }
-        
+         int maxNum=pow(10,n)-1;
+         for(long long int i=1;i<=9;i++){
+             solve(n-1,k,maxNum,i);
+         }
         return res;
-        
     }
 };
